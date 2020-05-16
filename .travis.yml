@@ -1,6 +1,5 @@
 language: android
 jdk: oraclejdk8
-sudo: false
 env:
   global:
     - ANDROID_API_LEVEL=29
@@ -28,4 +27,7 @@ before_script:
   - chmod +x gradlew
 
 script:
-  - ./gradlew clean build
+  - ./gradlew build jacocoTestReport assembleAndroidTest
+  
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
