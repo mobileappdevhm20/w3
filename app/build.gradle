@@ -1,6 +1,11 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'jacoco'
+
+jacoco { toolVersion = "0.8.5" }
+
+
 
 android {
     compileSdkVersion 29
@@ -21,9 +26,29 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            testCoverageEnabled true
+        }
+    }
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
     }
 
+    /*
+    classDirectories.setFrom(
+            sourceSets.main.get().output.asFileTree.matching {
+                exclude("java/edu/hm/w3timer/MainActivity.class")
+            }
+    )
+     */
 }
+
+tasks.withType(Test) { jacoco.includeNoLocationClasses = true }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
